@@ -107,33 +107,6 @@
             "branch": "[parameters('branch')]",
             "IsManualIntegration": true
           }
-        },
-        {
-          "name": "appsettings",
-          "type": "config",
-          "apiVersion": "2015-08-01",
-          "dependsOn": [
-            "[concat('Microsoft.Web/sites/', parameters('siteName'))]"
-          ],
-          "properties": {
-            "handlerMappings": [
-              {
-                  "extension": "fastCgi",
-                  "scriptProcessor": "D:\\home\\python364x64\\python.exe",
-                  "arguments": "D:\\home\\python364x64\\wfastcgi.py"
-              }
-          ]
-          }
-        },
-        {
-          "apiVersion": "2015-08-01",
-          "name": "azureappservice-python364x64",
-          "type": "siteextensions",
-          "dependsOn": [
-            "[resourceId('Microsoft.Web/Sites', parameters('siteName'))]",
-            "[resourceId('Microsoft.Web/Sites/config', parameters('siteName'), 'web')]"
-          ],
-          "properties": {}
         }
       ]
     }

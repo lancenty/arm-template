@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "siteName": {
+      "value": "GEN-UNIQUE"
+    },
+    "hostingPlanName": {
+      "value": "GEN-UNIQUE"
+    },
+
+    "repoURL": {
+      "value": "https://github.com/lancenty/ly-azure-web-flask.git",
+    },
+    "location": {
+      "value": "West Europe"
+    }
+  }
+}
