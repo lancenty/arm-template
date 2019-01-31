@@ -1,0 +1,11 @@
+{
+  "$schema": "https://aka.ms/azure-quickstart-templates-metadata-schema#",
+  "type": "QuickStart",
+  "itemDisplayName": "Deploy a web app with Python extension configured",
+  "description": "Deploy a web app with Python extension configured.",
+  "summary": "Deploy a web app with Python extension configured",
+  "githubUsername": "lancenty",
+  "dateUpdated": "2018-01-31"
+}
+
+
