@@ -8,7 +8,6 @@
     "hostingPlanName": {
       "value": "GEN-UNIQUE"
     },
-
     "repoURL": {
       "value": "https://github.com/lancenty/ly-azure-web-flask.git"
     },
