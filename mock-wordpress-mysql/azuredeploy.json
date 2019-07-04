@@ -1,0 +1,221 @@
+{
+  "parameters": {
+      "databaseName": {
+          "type": "string"
+      },
+      "administratorLogin": {
+          "type": "string"
+      },
+      "administratorLoginPassword": {
+          "type": "securestring"
+      },
+      "mysqLocation": {
+          "type": "string"
+      },
+      "serverName": {
+          "type": "string"
+      },
+      "skuCapacity": {
+          "type": "int"
+      },
+      "skuFamily": {
+          "type": "string"
+      },
+      "storageMB": {
+          "type": "int"
+      },
+      "backupRetentionDays": {
+          "type": "int"
+      },
+      "geoRedundantBackup": {
+          "type": "string"
+      },
+      "skuName": {
+          "type": "string"
+      },
+      "skuSizeMB": {
+          "type": "int"
+      },
+      "skuTier": {
+          "type": "string"
+      },
+      "version": {
+          "type": "string"
+      },
+      "charset": {
+          "type": "string"
+      },
+      "collation": {
+          "type": "string"
+      },
+      "name": {
+          "type": "string"
+      },
+      "hostingPlanName": {
+          "type": "string"
+      },
+      "location": {
+          "type": "string"
+      },
+      "hostingEnvironment": {
+          "type": "string"
+      },
+      "serverFarmResourceGroup": {
+          "type": "string"
+      },
+      "subscriptionId": {
+          "type": "string"
+      }
+  },
+  "resources": [
+      {
+          "name": "[parameters('name')]",
+          "type": "Microsoft.Web/sites",
+          "properties": {
+              "siteConfig": {
+                  "appSettings": [
+                      {
+                          "name": "PHPMYADMIN_EXTENSION_VERSION",
+                          "value": "latest"
+                      },
+                      {
+                          "name": "WEBSITE_DYNAMIC_CACHE",
+                          "value": "0"
+                      },
+                      {
+                          "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                          "value": "[reference('microsoft.insights/components/ly-wp', '2015-05-01').InstrumentationKey]"
+                      },
+                      {
+                          "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
+                          "value": "~2"
+                      },
+                      {
+                          "name": "XDT_MicrosoftApplicationInsights_Mode",
+                          "value": "default"
+                      },
+                      {
+                          "name": "DiagnosticServices_EXTENSION_VERSION",
+                          "value": "disabled"
+                      },
+                      {
+                          "name": "APPINSIGHTS_PROFILERFEATURE_VERSION",
+                          "value": "disabled"
+                      },
+                      {
+                          "name": "APPINSIGHTS_SNAPSHOTFEATURE_VERSION",
+                          "value": "disabled"
+                      },
+                      {
+                          "name": "InstrumentationEngine_EXTENSION_VERSION",
+                          "value": "disabled"
+                      },
+                      {
+                          "name": "SnapshotDebugger_EXTENSION_VERSION",
+                          "value": "disabled"
+                      },
+                      {
+                          "name": "XDT_MicrosoftApplicationInsights_BaseExtensions",
+                          "value": "disabled"
+                      }
+                  ],
+                  "phpVersion": "7.0",
+                  "connectionStrings": [
+                      {
+                          "name": "defaultConnection",
+                          "ConnectionString": "[concat('Database=', parameters('databaseName'), ';Data Source=', parameters('serverName') ,'.mysql.database.azure.com;User Id=',parameters('administratorLogin'),'@',parameters('serverName') ,';Password=',parameters('administratorLoginPassword'))]",
+                          "type": "MySQL"
+                      }
+                  ]
+              },
+              "name": "[parameters('name')]",
+              "serverFarmId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+              "hostingEnvironment": "[parameters('hostingEnvironment')]"
+          },
+          "resources": [
+              {
+                  "apiVersion": "2016-03-01",
+                  "name": "web",
+                  "type": "sourcecontrols",
+                  "dependsOn": [
+                      "[resourceId('Microsoft.Web/Sites', parameters('name'))]"
+                  ],
+                  "properties": {
+                      "RepoUrl": "https://github.com/azureappserviceoss/wordpress-azure",
+                      "branch": "master",
+                      "IsManualIntegration": true
+                  }
+              }
+          ],
+          "dependsOn": [
+              "microsoft.insights/components/ly-wp"
+          ],
+          "apiVersion": "2016-03-01",
+          "location": "[parameters('location')]"
+      },
+      {
+          "apiVersion": "2015-05-01",
+          "name": "ly-wp",
+          "type": "microsoft.insights/components",
+          "location": "westeurope",
+          "properties": {
+              "ApplicationId": "[parameters('name')]",
+              "Request_Source": "IbizaWebAppExtensionCreate"
+          }
+      },
+      {
+          "name": "[parameters('serverName')]",
+          "type": "Microsoft.DBforMySQL/servers",
+          "apiVersion": "2017-12-01-preview",
+          "location": "[parameters('mysqLocation')]",
+          "properties": {
+              "version": "[parameters('version')]",
+              "administratorLogin": "[parameters('administratorLogin')]",
+              "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+              "storageProfile": {
+                  "storageMB": "[parameters('skuSizeMB')]",
+                  "backupRetentionDays": "[parameters('backupRetentionDays')]",
+                  "geoRedundantBackup": "[parameters('geoRedundantBackup')]"
+              },
+              "sslEnforcement": "Disabled"
+          },
+          "sku": {
+              "name": "[parameters('skuName')]",
+              "tier": "[parameters('skuTier')]",
+              "capacity": "[parameters('skuCapacity')]",
+              "size": "[parameters('skuSizeMB')]",
+              "family": "[parameters('skuFamily')]"
+          },
+          "resources": [
+              {
+                  "name": "AllowAll",
+                  "type": "firewallrules",
+                  "apiVersion": "2017-12-01-preview",
+                  "properties": {
+                      "startIpAddress": "0.0.0.0",
+                      "endIpAddress": "255.255.255.255"
+                  },
+                  "location": "[parameters('mysqLocation')]",
+                  "dependsOn": [
+                      "[concat('Microsoft.DBforMySQL/servers/', parameters('serverName'), '/databases/' , parameters('databaseName'))]",
+                      "[concat('Microsoft.DBforMySQL/servers/', parameters('serverName'))]"
+                  ]
+              },
+              {
+                  "name": "[parameters('databaseName')]",
+                  "type": "databases",
+                  "apiVersion": "2017-12-01-preview",
+                  "properties": {
+                      "charset": "[parameters('charset')]",
+                      "collation": "[parameters('collation')]"
+                  },
+                  "dependsOn": [
+                      "[concat('Microsoft.DBforMySQL/servers/', parameters('serverName'))]"
+                  ]
+              }
+          ]
+      }
+  ],
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0"
+}
