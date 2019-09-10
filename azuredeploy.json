@@ -64,6 +64,16 @@
       ],
       "resources": [
         {
+          "apiVersion": "2015-08-01",
+          "name": "ASP.NET Core Logging Extensions",
+          "type": "siteextensions",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/Sites', parameters('webAppName'))]",
+            "[resourceId('Microsoft.Web/Sites/config', parameters('webAppName'), logs')]"
+          ],
+          "properties": {}
+        },
+        {
           "name": "logs",
           "type": "config",
           "dependsOn": [
