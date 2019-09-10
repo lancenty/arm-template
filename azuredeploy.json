@@ -26,7 +26,16 @@
   },
   "variables": {
     "webAppPortalName": "[parameters('webAppName')]",
-    "appServicePlanName": "[concat('AppServicePlan-', parameters('webAppName'))]"
+    "appServicePlanName": "[concat('AppServicePlan-', parameters('webAppName'))]",
+    "sharedInfraGroup": "DevOpsDemo",
+    "loggingStorageAccount": "lytestlogging",
+    "loggingResourceId": "[resourceId(variables('sharedInfraGroup'), 'Microsoft.Storage/storageAccounts', variables('loggingStorageAccount'))]",
+    "listAccountSasRequestContent": {
+      "signedServices": "bqtf",
+      "signedPermission": "rwdlacup",
+      "signedExpiry": "2020-05-01T00:00:00Z",
+      "signedResourceTypes": "sco"
+    }
   },
   "resources": [
     {
@@ -52,6 +61,38 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]"
+      ],
+      "resources": [
+        {
+          "name": "logs",
+          "type": "config",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('webSiteName'))]"
+          ],
+          "properties": {
+            "applicationLogs": {
+              "azureBlobStorage": {
+                "level": "Information",
+                "sasUrl": "[concat(reference(variables('loggingResourceId'), '2018-07-01').primaryEndpoints.blob, 'applogs', '?', listAccountSas(variables('loggingResourceId'), '2019-04-01', variables('listAccountSasRequestContent')).accountSasToken)]",
+                "retentionInDays": 10
+              }
+            },
+            "httpLogs": {
+              "azureBlobStorage": {
+                "enabled": false,
+                "sasUrl": "[concat(reference(variables('loggingResourceId'), '2018-07-01').primaryEndpoints.blob, 'httplogs', '?', listAccountSas(variables('loggingResourceId'), '2019-04-01', variables('listAccountSasRequestContent')).accountSasToken)]",
+                "retentionInDays": 10
+              }
+            },
+            "failedRequestsTracing": {
+              "enabled": true
+            },
+            "detailedErrorMessages": {
+              "enabled": true
+            }
+          },
+          "apiVersion": "2018-11-01"
+        }
       ]
     }
   ]

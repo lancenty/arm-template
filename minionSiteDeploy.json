@@ -76,35 +76,6 @@
         }
       ],
       "location": "[resourceGroup().location]",
-      "tags": {
-        "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('appServicePlanName'))]": "Resource",
-        "displayName": "Website",
-        "client": "Mcd Japan MOP",
-        "system": "MOP",
-        "deployment": "[parameters('environmentId')]"
-      },
-      "apiVersion": "2018-11-01"
-    },
-    {
-      "name": "[concat(variables('webSiteName'), '/', 'staging')]",
-      "type": "Microsoft.Web/sites/slots",
-      "kind": "app",
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', variables('webSiteName'))]"
-      ],
-      "properties": {
-        "enabled": true,
-        "serverFarmId": "[resourceId(resourceGroup().name, 'Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
-        "siteConfig": {
-          "use32BitWorkerProcess": false,
-          "alwaysOn": true,
-          "connectionStrings": [],
-          "ftpsState": "Disabled"
-        },
-        "clientAffinityEnabled": false,
-        "httpsOnly": true
-      },
-      "location": "[resourceGroup().location]",
       "apiVersion": "2018-11-01"
     }
   ],
