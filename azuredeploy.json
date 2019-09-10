@@ -65,7 +65,7 @@
       "resources": [
         {
           "apiVersion": "2015-08-01",
-          "name": "ASP.NET Core Logging Extensions",
+          "name": "Microsoft.AspNetCore.AzureAppServices.SiteExtension",
           "type": "siteextensions",
           "dependsOn": [
             "[resourceId('Microsoft.Web/Sites', parameters('webAppName'))]",
