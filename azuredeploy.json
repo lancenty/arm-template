@@ -67,7 +67,7 @@
           "name": "logs",
           "type": "config",
           "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', variables('webSiteName'))]"
+            "[resourceId('Microsoft.Web/sites', variables('webAppName'))]"
           ],
           "properties": {
             "applicationLogs": {
