@@ -69,7 +69,7 @@
           "type": "siteextensions",
           "dependsOn": [
             "[resourceId('Microsoft.Web/Sites', parameters('webAppName'))]",
-            "[resourceId('Microsoft.Web/Sites/config', parameters('webAppName'), logs')]"
+            "[resourceId('Microsoft.Web/Sites/config', parameters('webAppName'), 'logs')]"
           ],
           "properties": {}
         },
