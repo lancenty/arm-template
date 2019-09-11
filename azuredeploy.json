@@ -83,7 +83,7 @@
             "applicationLogs": {
               "azureBlobStorage": {
                 "level": "Information",
-                "sasUrl": "[concat(reference(variables('loggingResourceId'), '2018-07-01').primaryEndpoints.blob, parameters('webAppName'), '?', listAccountSas(variables('loggingResourceId'), '2019-04-01', variables('listAccountSasRequestContent')).accountSasToken)]",
+                "sasUrl": "[concat(reference(variables('loggingResourceId'), '2018-07-01').primaryEndpoints.blob, 'applog', '?', listAccountSas(variables('loggingResourceId'), '2019-04-01', variables('listAccountSasRequestContent')).accountSasToken)]",
                 "retentionInDays": 10
               }
             },
